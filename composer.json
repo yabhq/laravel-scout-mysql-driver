@@ -1,0 +1,22 @@
+{
+    "name": "damiantw/laravel-scout-mysql-driver",
+    "description": "MySQL driver for Laravel Scout.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Damian Crisafulli",
+            "email": "damian.crisafulli@troyweb.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.6.4",
+        "laravel/framework": "5.3.*",
+        "laravel/scout": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "DamianTW\\MySQLScout\\": "src/"
+        }
+    }
+}
