@@ -122,7 +122,6 @@ Operators for `BOOLEAN` mode should be passed as part of the search string.
 
 
 For more information see the 
-
 [MySQL's Full-Text Search Functions documentation](http://dev.mysql.com/doc/refman/5.7/en/fulltext-search.html).
 
 ### LIKE and LIKE_EXPANDED Modes
@@ -163,7 +162,7 @@ and a MySQL connection within the  directories defined in the `scout.mysql.model
 
 Pass the command a Model to create a `FULLTEXT` index for all of the Model's `FULLTEXT` compatible fields 
 (`CHAR`,`VARCHAR`,`TEXT`) returned from the Model's `toSearchableArray()` method.  The index name will be the result of
-the Mode's `searchableAs()` method. 
+the Model's `searchableAs()` method. 
 
 If an index already exists for the Model and the Model contains new searchable fields not in the existing index the
 index will be dropped and recreated.
@@ -193,7 +192,7 @@ run and an empty Collection will be returned.
 
 * `scout.mysql.min_fulltext_search_length` - If using `NATURAL_LANGUAGE` or `BOOLEAN` modes and a search string's length 
 is less than this value the driver will revert to a fallback mode. By default MySQL requires a search string length of at 
-least 4 to to run `FULL TEXT` queries. For information on changing this see the 
+least 4 to to run `FULLTEXT` queries. For information on changing this see the 
 [MySQL's Fine-Tuning MySQL Full-Text Search documentation](http://dev.mysql.com/doc/refman/5.7/en/fulltext-fine-tuning.html).
 
 * `scout.mysql.min_fulltext_search_fallback` - The mode that will be used as a fallback when the search string's length 
