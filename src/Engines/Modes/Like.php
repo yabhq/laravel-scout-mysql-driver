@@ -25,9 +25,7 @@ class Like extends Mode
 
         $this->fields = $this->modelService->getSearchableFields();
 
-        foreach ($this->builder->wheres as $field => $value) {
-            $queryString .= "$field = :$field AND ";
-        }
+        $queryString .= $this->buildWheres();
 
         $queryString .= '(';
 
@@ -46,17 +44,11 @@ class Like extends Mode
 
     public function buildParams()
     {
-        $params = [];
-
-        foreach ($this->builder->wheres as $field => $value) {
-            $params[$field] = $value;
-        }
-
         for ($itr = 0; $itr < count($this->fields); $itr++) {
-            $params["_search$itr"] = '%' . $this->builder->query . '%';
+            $this->whereParams["_search$itr"] = '%' . $this->builder->query . '%';
         }
 
-        return $params;
+        return $this->whereParams;
     }
 
     public function isFullText()

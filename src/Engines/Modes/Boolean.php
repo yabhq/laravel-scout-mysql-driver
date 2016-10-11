@@ -21,9 +21,7 @@ class Boolean extends Mode
     {
         $queryString = '';
 
-        foreach ($this->builder->wheres as $field => $value) {
-            $queryString .= "$field = :$field AND ";
-        }
+        $queryString .= $this->buildWheres();
 
         $indexFields = implode(',',  $this->modelService->getFullTextIndexFields());
 
@@ -34,14 +32,9 @@ class Boolean extends Mode
 
     public function buildParams()
     {
-        $params = [];
 
-        foreach ($this->builder->wheres as $field => $value) {
-            $params[$field] = $value;
-        }
-
-        $params['_search'] = $this->builder->query;
-        return $params;
+        $this->whereParams['_search'] = $this->builder->query;
+        return $this->whereParams;
     }
 
     public function isFullText()

@@ -78,6 +78,20 @@ Simply call the `search()` method on your `Searchable` models:
 
 `$beers = App\Drink::search('beer')->get();`
 
+Or With pagination: 
+
+`$beers = App\Drink::search('beer')->paginate(15);`
+
+Simple constraints can be applied using the `where()` builder method 
+(each additional `WHERE` will be applied using `AND`).
+
+`$beers = App\Drink::search('beer')->where('in_stock', 1)->get();`
+
+The following operators can be applied to the `WHERE` statements: `<> != = <= < >= >` 
+(`=` will be used if no operator is specified)
+
+`$beers = App\Drink::search('beer')->where('abv >', 10)->get();`
+
 For more usage information see the [Laravel Scout Documentation](https://laravel.com/docs/5.3/scout).
 
 Modes <div id="modes"></div>

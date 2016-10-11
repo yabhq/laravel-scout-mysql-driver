@@ -25,9 +25,7 @@ class LikeExpanded extends Mode
 
         $this->fields = $this->modelService->getSearchableFields();
 
-        foreach ($this->builder->wheres as $field => $value) {
-            $queryString .= "$field = :$field AND ";
-        }
+        $queryString .= $this->buildWheres();
 
         $words = explode(' ', $this->builder->query);
 
@@ -53,21 +51,15 @@ class LikeExpanded extends Mode
     {
         $words = explode(' ', $this->builder->query);
 
-        $params = [];
-
-        foreach ($this->builder->wheres as $field => $value) {
-            $params[$field] = $value;
-        }
-
         $itr = 0;
         for ($i = 0; $i < count($this->fields); $i++) {
             foreach ($words as $word) {
-                $params["_search$itr"] = '%' . $word . '%';
+                $this->whereParams["_search$itr"] = '%' . $word . '%';
                 $itr ++;
             }
         }
 
-        return $params;
+        return $this->whereParams;
 
     }
 
