@@ -70,7 +70,7 @@ class MySQLEngine extends Engine
             $query = $query->take($this->builder->limit);
         }
 
-        if($this->builder->offset) {
+        if(property_exists($this->builder, 'offset') && $this->builder->offset) {
             $query = $query->skip($this->builder->offset);
         }
 
