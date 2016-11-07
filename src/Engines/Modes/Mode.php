@@ -3,30 +3,32 @@
 namespace DamianTW\MySQLScout\Engines\Modes;
 
 use Laravel\Scout\Builder;
+use DamianTW\MySQLScout\Services\ModelService;
 
 abstract class Mode
 {
-    protected $builder;
 
     protected $whereParams = [];
 
-    function __construct(Builder $builder)
+    protected $modelService;
+
+    function __construct()
     {
-        $this->builder = $builder;
+        $this->modelService = resolve(ModelService::class);
     }
 
-    abstract public function buildWhereRawString();
+    abstract public function buildWhereRawString(Builder $builder);
 
-    abstract public function buildParams();
+    abstract public function buildParams(Builder $builder);
 
     abstract public function isFullText();
 
-    protected function buildWheres()
+    protected function buildWheres(Builder $builder)
     {
 
         $queryString = '';
 
-        $parsedWheres = $this->parseWheres($this->builder->wheres);
+        $parsedWheres = $this->parseWheres($builder->wheres);
 
         foreach ($parsedWheres as $parsedWhere) {
 

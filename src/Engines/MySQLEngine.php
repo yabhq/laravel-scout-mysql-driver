@@ -2,6 +2,7 @@
 
 namespace DamianTW\MySQLScout\Engines;
 
+use DamianTW\MySQLScout\Engines\Modes\ModeContainer;
 use Illuminate\Database\Eloquent\Collection;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine;
@@ -11,19 +12,12 @@ class MySQLEngine extends Engine
 
     protected $mode;
 
-    protected $builder;
+    protected $fallbackMode;
 
-    public function setup(Builder $builder)
+    function __construct(ModeContainer $modeContainer)
     {
-        $this->builder = $builder;
-
-        $mode = __NAMESPACE__ . '\\Modes\\' . studly_case(strtolower(config('scout.mysql.mode')));
-        $this->mode = new $mode($this->builder);
-
-        if($this->shouldUseFallback()) {
-            $mode = __NAMESPACE__ . '\\Modes\\' . studly_case(strtolower(config('scout.mysql.min_fulltext_search_fallback')));
-            $this->mode = new $mode($this->builder);
-        }
+        $this->mode = $modeContainer->mode;
+        $this->fallbackMode = $modeContainer->fallbackMode;
     }
 
     public function update($models)
@@ -48,30 +42,28 @@ class MySQLEngine extends Engine
 
         $result = [];
 
-        $this->setup($builder);
-
-        if($this->shouldNotRun()) {
+        if($this->shouldNotRun($builder)) {
             $result['results'] = Collection::make();
             $result['count'] = 0;
             return $result;
         }
 
+        $mode = $this->shouldUseFallback($builder) ? $this->fallbackMode : $this->mode;
 
-        $model = $this->builder->model;
+        $whereRawString = $mode->buildWhereRawString($builder);
+        $params = $mode->buildParams($builder);
 
-        $whereRawString = $this->mode->buildWhereRawString();
-        $params = $this->mode->buildParams();
-
+        $model = $builder->model;
         $query = $model::whereRaw($whereRawString, $params);
 
         $result['count'] = $query->count();
 
-        if($this->builder->limit) {
-            $query = $query->take($this->builder->limit);
+        if($builder->limit) {
+            $query = $query->take($builder->limit);
         }
 
-        if(property_exists($this->builder, 'offset') && $this->builder->offset) {
-            $query = $query->skip($this->builder->offset);
+        if(property_exists($builder, 'offset') && $builder->offset) {
+            $query = $query->skip($builder->offset);
         }
 
         $result['results'] = $query->get();
@@ -121,15 +113,15 @@ class MySQLEngine extends Engine
         return $results['count'];
     }
 
-    protected function shouldNotRun()
+    protected function shouldNotRun($builder)
     {
-        return strlen($this->builder->query) < config('scout.mysql.min_search_length');
+        return strlen($builder->query) < config('scout.mysql.min_search_length');
     }
 
-    protected function shouldUseFallback()
+    protected function shouldUseFallback($builder)
     {
         return $this->mode->isFullText() &&
-        strlen($this->builder->query) < config('scout.mysql.min_fulltext_search_length');
+        strlen($builder->query) < config('scout.mysql.min_fulltext_search_length');
     }
 
 }

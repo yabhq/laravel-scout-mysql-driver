@@ -6,26 +6,16 @@ use DamianTW\MySQLScout\Services\ModelService;
 
 class Like extends Mode
 {
-
-    protected $modelService;
-
     protected $fields;
 
-    function __construct(Builder $builder)
+    public function buildWhereRawString(Builder $builder)
     {
-        parent::__construct($builder);
 
-        $this->modelService = resolve(ModelService::class);
-        $this->modelService->setModel($this->builder->model);
-    }
-
-    public function buildWhereRawString()
-    {
         $queryString = '';
 
-        $this->fields = $this->modelService->getSearchableFields();
+        $this->fields = $this->modelService->setModel($builder->model)->getSearchableFields();
 
-        $queryString .= $this->buildWheres();
+        $queryString .= $this->buildWheres($builder);
 
         $queryString .= '(';
 
@@ -42,10 +32,10 @@ class Like extends Mode
 
     }
 
-    public function buildParams()
+    public function buildParams(Builder $builder)
     {
         for ($itr = 0; $itr < count($this->fields); $itr++) {
-            $this->whereParams["_search$itr"] = '%' . $this->builder->query . '%';
+            $this->whereParams["_search$itr"] = '%' . $builder->query . '%';
         }
 
         return $this->whereParams;

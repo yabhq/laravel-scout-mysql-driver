@@ -7,27 +7,19 @@ use DamianTW\MySQLScout\Services\ModelService;
 
 class LikeExpanded extends Mode
 {
-    protected $modelService;
 
     protected $fields;
 
-    function __construct(Builder $builder)
+    public function buildWhereRawString(Builder $builder)
     {
-        parent::__construct($builder);
 
-        $this->modelService = resolve(ModelService::class);
-        $this->modelService->setModel($this->builder->model);
-    }
-
-    public function buildWhereRawString()
-    {
         $queryString = '';
 
-        $this->fields = $this->modelService->getSearchableFields();
+        $this->fields = $this->modelService->setModel($builder->model)->getSearchableFields();
 
-        $queryString .= $this->buildWheres();
+        $queryString .= $this->buildWheres($builder);
 
-        $words = explode(' ', $this->builder->query);
+        $words = explode(' ', $builder->query);
 
         $queryString .= '(';
 
@@ -47,9 +39,9 @@ class LikeExpanded extends Mode
 
     }
 
-    public function buildParams()
+    public function buildParams(Builder $builder)
     {
-        $words = explode(' ', $this->builder->query);
+        $words = explode(' ', $builder->query);
 
         $itr = 0;
         for ($i = 0; $i < count($this->fields); $i++) {

@@ -29,6 +29,8 @@ class ModelService
 
         $this->indexName = $modelInstance->searchableAs();
 
+        return $this;
+
     }
 
     public function getFullTextIndexFields()

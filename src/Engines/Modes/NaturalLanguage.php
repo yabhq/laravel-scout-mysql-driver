@@ -3,27 +3,17 @@
 namespace DamianTW\MySQLScout\Engines\Modes;
 
 use Laravel\Scout\Builder;
-use DamianTW\MySQLScout\Services\ModelService;
 
 class NaturalLanguage extends Mode
 {
-    protected $modelService;
 
-    function __construct(Builder $builder)
-    {
-        parent::__construct($builder);
-
-        $this->modelService = resolve(ModelService::class);
-        $this->modelService->setModel($this->builder->model);
-    }
-
-    public function buildWhereRawString()
+    public function buildWhereRawString(Builder $builder)
     {
         $queryString = '';
 
-        $queryString .= $this->buildWheres();
+        $queryString .= $this->buildWheres($builder);
 
-        $indexFields = implode(',',  $this->modelService->getFullTextIndexFields());
+        $indexFields = implode(',',  $this->modelService->setModel($builder->model)->getFullTextIndexFields());
 
         $queryString .= "MATCH($indexFields) AGAINST(:_search IN NATURAL LANGUAGE MODE";
 
@@ -37,10 +27,10 @@ class NaturalLanguage extends Mode
 
     }
 
-    public function buildParams()
+    public function buildParams(Builder $builder)
     {
 
-        $this->whereParams['_search'] = $this->builder->query;
+        $this->whereParams['_search'] = $builder->query;
         return $this->whereParams;
     }
 
