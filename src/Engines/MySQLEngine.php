@@ -58,6 +58,10 @@ class MySQLEngine extends Engine
 
         $result['count'] = $query->count();
 
+        foreach ($builder->orders as $order) {
+            $query->orderBy($order['column'], $order['direction']);
+        }
+
         if($builder->limit) {
             $query = $query->take($builder->limit);
         }
