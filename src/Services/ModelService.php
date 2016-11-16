@@ -23,9 +23,10 @@ class ModelService
 
         $this->model = $model;
 
-        $this->connectionName =  $modelInstance->getConnectionName();
+        $this->connectionName = $modelInstance->getConnectionName() !== null ?
+            $modelInstance->getConnectionName() : config('database.default');
 
-        $this->tableName = $modelInstance->getTable();
+        $this->tableName = config("database.connections.$this->connectionName.prefix", '').$modelInstance->getTable();
 
         $this->indexName = $modelInstance->searchableAs();
 
