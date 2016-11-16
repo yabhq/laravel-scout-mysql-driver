@@ -9,12 +9,11 @@ use Laravel\Scout\Engines\Engine;
 
 class MySQLEngine extends Engine
 {
-
     protected $mode;
 
     protected $fallbackMode;
 
-    function __construct(ModeContainer $modeContainer)
+    public function __construct(ModeContainer $modeContainer)
     {
         $this->mode = $modeContainer->mode;
         $this->fallbackMode = $modeContainer->fallbackMode;
@@ -22,12 +21,10 @@ class MySQLEngine extends Engine
 
     public function update($models)
     {
-
     }
 
     public function delete($models)
     {
-
     }
 
     /**
@@ -39,12 +36,12 @@ class MySQLEngine extends Engine
      */
     public function search(Builder $builder)
     {
-
         $result = [];
 
-        if($this->shouldNotRun($builder)) {
+        if ($this->shouldNotRun($builder)) {
             $result['results'] = Collection::make();
             $result['count'] = 0;
+
             return $result;
         }
 
@@ -64,18 +61,17 @@ class MySQLEngine extends Engine
             }
         }
 
-        if($builder->limit) {
+        if ($builder->limit) {
             $query = $query->take($builder->limit);
         }
 
-        if(property_exists($builder, 'offset') && $builder->offset) {
+        if (property_exists($builder, 'offset') && $builder->offset) {
             $query = $query->skip($builder->offset);
         }
 
         $result['results'] = $query->get();
 
         return $result;
-
     }
 
     /**
@@ -91,6 +87,7 @@ class MySQLEngine extends Engine
     {
         $builder->limit = $perPage;
         $builder->offset = ($perPage * $page) - $perPage;
+
         return $this->search($builder);
     }
 
@@ -129,5 +126,4 @@ class MySQLEngine extends Engine
         return $this->mode->isFullText() &&
         strlen($builder->query) < config('scout.mysql.min_fulltext_search_length');
     }
-
 }

@@ -7,12 +7,10 @@ use DamianTW\MySQLScout\Services\ModelService;
 
 class LikeExpanded extends Mode
 {
-
     protected $fields;
 
     public function buildWhereRawString(Builder $builder)
     {
-
         $queryString = '';
 
         $this->fields = $this->modelService->setModel($builder->model)->getSearchableFields();
@@ -28,7 +26,7 @@ class LikeExpanded extends Mode
         foreach ($this->fields as $field) {
             foreach ($words as $word) {
                 $queryString .= "`$field` LIKE :_search$itr OR ";
-                $itr++;
+                ++$itr;
             }
         }
 
@@ -36,7 +34,6 @@ class LikeExpanded extends Mode
         $queryString .= ')';
 
         return$queryString;
-
     }
 
     public function buildParams(Builder $builder)
@@ -44,15 +41,14 @@ class LikeExpanded extends Mode
         $words = explode(' ', $builder->query);
 
         $itr = 0;
-        for ($i = 0; $i < count($this->fields); $i++) {
+        for ($i = 0; $i < count($this->fields); ++$i) {
             foreach ($words as $word) {
-                $this->whereParams["_search$itr"] = '%' . $word . '%';
-                $itr ++;
+                $this->whereParams["_search$itr"] = '%'.$word.'%';
+                ++$itr;
             }
         }
 
         return $this->whereParams;
-
     }
 
     public function isFullText()

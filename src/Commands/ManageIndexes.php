@@ -40,11 +40,11 @@ class ManageIndexes extends Command
      * Execute the console command.
      *
      * @param Dispatcher $events
+     *
      * @return mixed
      */
     public function handle(Dispatcher $events)
     {
-
         $events->listen(Events\ModelIndexCreated::class, function ($event) {
             $this->comment("Index '$event->indexName' created with fields: $event->indexFields");
         });
@@ -64,19 +64,16 @@ class ManageIndexes extends Command
         $model = $this->argument('model');
         $drop = $this->option('drop');
 
-        if(! $model) {
+        if (!$model) {
             $modelDirectories = config('scout.mysql.model_directories');
             $searchableModels = $this->indexService->getAllSearchableModels($modelDirectories);
 
             foreach ($searchableModels as $searchableModel) {
                 $drop ? $this->dropModelIndex($searchableModel) : $this->createOrUpdateModelIndex($searchableModel);
             }
-
-        }
-        else {
+        } else {
             $drop ? $this->dropModelIndex($model) : $this->createOrUpdateModelIndex($model);
         }
-
     }
 
     private function createOrUpdateModelIndex($searchableModel)
@@ -92,5 +89,4 @@ class ManageIndexes extends Command
         $this->indexService->setModel($searchableModel);
         $this->indexService->dropIndex();
     }
-
 }

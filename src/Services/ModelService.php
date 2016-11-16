@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 class ModelService
 {
-
     public $model;
 
     public $connectionName;
@@ -19,7 +18,7 @@ class ModelService
 
     public function setModel($model)
     {
-        $modelInstance = new $model;
+        $modelInstance = new $model();
 
         $this->model = $model;
 
@@ -31,7 +30,6 @@ class ModelService
         $this->indexName = $modelInstance->searchableAs();
 
         return $this;
-
     }
 
     public function getFullTextIndexFields()
@@ -45,19 +43,19 @@ class ModelService
             $columnType = DB::connection($this->connectionName)->
             select("SHOW FIELDS FROM $this->tableName where Field = ?", [$searchableField])[0]->Type;
 
-            if($this->isFullTextSupportedColumnType($columnType)) {
+            if ($this->isFullTextSupportedColumnType($columnType)) {
                 $indexFields[] = $searchableField;
             }
         }
 
         return $indexFields;
-
     }
 
     public function getSearchableFields()
     {
         $columns = $this->getAllFields();
-        return array_keys((new $this->model)->forceFill($columns)->toSearchableArray());
+
+        return array_keys((new $this->model())->forceFill($columns)->toSearchableArray());
     }
 
     protected function getAllFields()
@@ -65,7 +63,7 @@ class ModelService
         $columns = [];
 
         //@TODO cache this
-        foreach(DB::connection($this->connectionName)->select("SHOW COLUMNS FROM $this->tableName") as $column) {
+        foreach (DB::connection($this->connectionName)->select("SHOW COLUMNS FROM $this->tableName") as $column) {
             $columns[$column->Field] = null;
         }
 
@@ -75,14 +73,11 @@ class ModelService
     protected function isFullTextSupportedColumnType($columnType)
     {
         foreach ($this->fullTextIndexTypes as $fullTextIndexType) {
-
-            if(stripos($columnType, $fullTextIndexType) !== false) {
+            if (stripos($columnType, $fullTextIndexType) !== false) {
                 return true;
             }
-
         }
 
         return false;
     }
-
 }

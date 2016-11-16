@@ -7,11 +7,9 @@ use DamianTW\MySQLScout\Services\ModelService;
 
 class Boolean extends Mode
 {
-
     public function buildWhereRawString(Builder $builder)
     {
         $queryString = '';
-
 
         $queryString .= $this->buildWheres($builder);
 
@@ -24,8 +22,8 @@ class Boolean extends Mode
 
     public function buildParams(Builder $builder)
     {
-
         $this->whereParams['_search'] = $builder->query;
+
         return $this->whereParams;
     }
 

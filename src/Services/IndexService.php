@@ -13,7 +13,7 @@ class IndexService
 
     protected $modelService;
 
-    function __construct(ModelService $modelService)
+    public function __construct(ModelService $modelService)
     {
         $this->modelService = $modelService;
     }
@@ -28,14 +28,12 @@ class IndexService
         $searchableModels = [];
 
         foreach ($directories as $directory) {
-
-            $files = glob($directory . '/*.php');
+            $files = glob($directory.'/*.php');
 
             foreach ($files as $file) {
+                $class = $this->getAppNamespace().basename($file, '.php');
 
-                $class = $this->getAppNamespace() . basename($file, '.php');
-
-                $modelInstance = new $class;
+                $modelInstance = new $class();
 
                 $connectionName = $modelInstance->getConnectionName() !== null ?
                     $modelInstance->getConnectionName() : config('database.default');
@@ -46,28 +44,23 @@ class IndexService
                     $searchableModels[] = $class;
                 }
             }
-
         }
 
         return $searchableModels;
-
     }
 
     public function createOrUpdateIndex()
     {
-
-        if($this->indexAlreadyExists()) {
-            if($this->indexNeedsUpdate()) {
+        if ($this->indexAlreadyExists()) {
+            if ($this->indexNeedsUpdate()) {
                 $this->updateIndex();
-            }else{
+            } else {
                 event(new Events\ModelIndexIgnored($this->modelService->indexName));
             }
-        }
-        else {
+        } else {
             $this->createIndex();
         }
     }
-
 
     protected function createIndex()
     {
@@ -75,8 +68,9 @@ class IndexService
         $tableName = $this->modelService->tableName;
         $indexFields = implode(',', $this->modelService->getFullTextIndexFields());
 
-        if(empty($indexFields))
+        if (empty($indexFields)) {
             return;
+        }
 
         DB::connection($this->modelService->connectionName)
             ->statement("CREATE FULLTEXT INDEX $indexName ON $tableName ($indexFields)");
@@ -84,13 +78,12 @@ class IndexService
         event(new Events\ModelIndexCreated($indexName, $indexFields));
     }
 
-
     protected function indexAlreadyExists()
     {
         $tableName = $this->modelService->tableName;
         $indexName = $this->modelService->indexName;
 
-        return ! empty(DB::connection($this->modelService->connectionName)->
+        return !empty(DB::connection($this->modelService->connectionName)->
         select("SHOW INDEX FROM $tableName WHERE Key_name = ?", [$indexName]));
     }
 
@@ -104,7 +97,6 @@ class IndexService
 
     protected function getIndexFields()
     {
-
         $indexName = $this->modelService->indexName;
         $tableName = $this->modelService->tableName;
 
@@ -132,11 +124,10 @@ class IndexService
         $indexName = $this->modelService->indexName;
         $tableName = $this->modelService->tableName;
 
-        if($this->indexAlreadyExists()) {
+        if ($this->indexAlreadyExists()) {
             DB::connection($this->modelService->connectionName)
                 ->statement("ALTER TABLE $tableName DROP INDEX $indexName");
             event(new Events\ModelIndexDropped($this->modelService->indexName));
         }
     }
-
 }

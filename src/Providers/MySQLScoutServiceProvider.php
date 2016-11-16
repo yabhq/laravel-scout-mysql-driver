@@ -14,14 +14,12 @@ class MySQLScoutServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
-     *
-     * @return void
      */
     public function boot()
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                ManageIndexes::class
+                ManageIndexes::class,
             ]);
         }
 
@@ -32,13 +30,11 @@ class MySQLScoutServiceProvider extends ServiceProvider
 
     /**
      * Register the application services.
-     *
-     * @return void
      */
     public function register()
     {
         $this->app->singleton(ModelService::class, function ($app) {
-            return new ModelService;
+            return new ModelService();
         });
 
         $this->app->singleton(IndexService::class, function ($app) {
@@ -47,12 +43,10 @@ class MySQLScoutServiceProvider extends ServiceProvider
 
         $this->app->singleton(ModeContainer::class, function ($app) {
             $engineNamespace = 'DamianTW\\MySQLScout\\Engines\\Modes\\';
-            $mode = $engineNamespace . studly_case(strtolower(config('scout.mysql.mode')));
-            $fallbackMode = $engineNamespace . studly_case(strtolower(config('scout.mysql.min_fulltext_search_fallback')));
-            return new ModeContainer(new $mode, new $fallbackMode);
+            $mode = $engineNamespace.studly_case(strtolower(config('scout.mysql.mode')));
+            $fallbackMode = $engineNamespace.studly_case(strtolower(config('scout.mysql.min_fulltext_search_fallback')));
+
+            return new ModeContainer(new $mode(), new $fallbackMode());
         });
-
-
-
     }
 }
