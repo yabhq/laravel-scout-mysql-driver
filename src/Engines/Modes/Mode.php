@@ -24,6 +24,8 @@ abstract class Mode
 
     protected function buildWheres(Builder $builder)
     {
+        $this->whereParams = null;
+        
         $queryString = '';
 
         $parsedWheres = $this->parseWheres($builder->wheres);
