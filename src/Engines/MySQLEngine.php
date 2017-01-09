@@ -27,6 +27,10 @@ class MySQLEngine extends Engine
     {
     }
 
+    public function mapIds($results)
+    {
+    }
+
     /**
      * Perform the given search on the engine.
      *
