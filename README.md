@@ -1,3 +1,6 @@
+**Unfortunately I do not have much time to give this package the attention it needs.
+If you are interested in taking over this package please contact me at damian@troyweb.com**
+
 Laravel Scout MySQL Driver
 ==========================
 
