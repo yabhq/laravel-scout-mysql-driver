@@ -2,14 +2,14 @@
 
 namespace DamianTW\MySQLScout\Services;
 
+use Illuminate\Console\DetectsApplicationNamespace;
 use Laravel\Scout\Searchable;
-use Illuminate\Console\AppNamespaceDetectorTrait;
 use Illuminate\Support\Facades\DB;
 use DamianTW\MySQLScout\Events;
 
 class IndexService
 {
-    use AppNamespaceDetectorTrait;
+    use DetectsApplicationNamespace;
 
     protected $modelService;
 
