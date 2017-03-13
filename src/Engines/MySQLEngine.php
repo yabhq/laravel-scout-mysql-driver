@@ -55,7 +55,7 @@ class MySQLEngine extends Engine
         $params = $mode->buildParams($builder);
 
         $model = $builder->model;
-        $query = $model::whereRaw($whereRawString, $params);
+        $query = $model::whereRaw($whereRawString, $params)->withoutGlobalScopes();
 
         $result['count'] = $query->count();
 
