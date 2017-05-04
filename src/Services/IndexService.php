@@ -2,15 +2,13 @@
 
 namespace DamianTW\MySQLScout\Services;
 
-use Illuminate\Console\DetectsApplicationNamespace;
 use Laravel\Scout\Searchable;
 use Illuminate\Support\Facades\DB;
 use DamianTW\MySQLScout\Events;
+use Illuminate\Container\Container;
 
 class IndexService
 {
-    use DetectsApplicationNamespace;
-
     protected $modelService;
 
     public function __construct(ModelService $modelService)
@@ -110,6 +108,11 @@ class IndexService
         }
 
         return $indexFields;
+    }
+
+    public function getAppNamespace()
+    {
+        return Container::getInstance()->getNamespace();
     }
 
     protected function updateIndex()
