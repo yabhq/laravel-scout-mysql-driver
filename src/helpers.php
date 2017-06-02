@@ -10,7 +10,7 @@
      */
     function getClassFullNameFromFile($filePathName)
     {
-        return $this->getClassNamespaceFromFile($filePathName) . '\\' . $this->getClassNameFromFile($filePathName);
+        return getClassNamespaceFromFile($filePathName) . '\\' . getClassNameFromFile($filePathName);
     }
 
 
@@ -23,7 +23,7 @@
      */
     function getClassObjectFromFile($filePathName)
     {
-        $classString = $this->getClassFullNameFromFile($filePathName);
+        $classString = getClassFullNameFromFile($filePathName);
 
         $object = new $classString;
 
