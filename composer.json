@@ -17,6 +17,9 @@
     "autoload": {
         "psr-4": {
             "DamianTW\\MySQLScout\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     }
 }

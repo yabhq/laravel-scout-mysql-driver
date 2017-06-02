@@ -29,7 +29,7 @@ class IndexService
             $files = glob($directory.'/*.php');
 
             foreach ($files as $file) {
-                $class = $this->getAppNamespace().basename($file, '.php');
+                $class = getClassFullNameFromFile($file);
 
                 $modelInstance = new $class();
 
