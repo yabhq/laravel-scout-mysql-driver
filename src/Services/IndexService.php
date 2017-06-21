@@ -64,7 +64,9 @@ class IndexService
     {
         $indexName = $this->modelService->indexName;
         $tableName = $this->modelService->tableName;
-        $indexFields = implode(',', $this->modelService->getFullTextIndexFields());
+        $indexFields = implode(',', array_map(function($indexField) {
+            return "`$indexField`";
+        }, $this->modelService->getFullTextIndexFields()));
 
         if (empty($indexFields)) {
             return;
