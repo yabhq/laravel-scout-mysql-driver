@@ -21,12 +21,9 @@ class LikeExpanded extends Mode
 
         $queryString .= '(';
 
-        $itr = 0;
-
         foreach ($this->fields as $field) {
             foreach ($words as $word) {
-                $queryString .= "`$field` LIKE :_search$itr OR ";
-                ++$itr;
+                $queryString .= "`$field` LIKE ? OR ";
             }
         }
 
@@ -40,11 +37,9 @@ class LikeExpanded extends Mode
     {
         $words = explode(' ', $builder->query);
 
-        $itr = 0;
         for ($i = 0; $i < count($this->fields); ++$i) {
             foreach ($words as $word) {
-                $this->whereParams["_search$itr"] = '%'.$word.'%';
-                ++$itr;
+                $this->whereParams[] = '%'.$word.'%';
             }
         }
 

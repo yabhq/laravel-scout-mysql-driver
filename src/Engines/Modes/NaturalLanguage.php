@@ -14,7 +14,7 @@ class NaturalLanguage extends Mode
 
         $indexFields = implode(',',  $this->modelService->setModel($builder->model)->getFullTextIndexFields());
 
-        $queryString .= "MATCH($indexFields) AGAINST(:_search IN NATURAL LANGUAGE MODE";
+        $queryString .= "MATCH($indexFields) AGAINST(? IN NATURAL LANGUAGE MODE";
 
         if (config('scout.mysql.query_expansion')) {
             $queryString .= ' WITH QUERY EXPANSION';
@@ -27,7 +27,7 @@ class NaturalLanguage extends Mode
 
     public function buildParams(Builder $builder)
     {
-        $this->whereParams['_search'] = $builder->query;
+        $this->whereParams[] = $builder->query;
 
         return $this->whereParams;
     }

@@ -19,10 +19,8 @@ class Like extends Mode
 
         $queryString .= '(';
 
-        $itr = 0;
         foreach ($this->fields as $field) {
-            $queryString .= "`$field` LIKE :_search$itr OR ";
-            ++$itr;
+            $queryString .= "`$field` LIKE ? OR ";
         }
 
         $queryString = trim($queryString, 'OR ');
@@ -34,7 +32,7 @@ class Like extends Mode
     public function buildParams(Builder $builder)
     {
         for ($itr = 0; $itr < count($this->fields); ++$itr) {
-            $this->whereParams["_search$itr"] = '%'.$builder->query.'%';
+            $this->whereParams[] = '%'.$builder->query.'%';
         }
 
         return $this->whereParams;
