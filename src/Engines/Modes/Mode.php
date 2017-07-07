@@ -37,7 +37,7 @@ abstract class Mode
 
             $this->whereParams[$field] = $value;
 
-            $queryString .= "$field $operator :$field AND ";
+            $queryString .= "$field $operator ? AND ";
         }
 
         return $queryString;

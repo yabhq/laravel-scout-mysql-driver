@@ -15,14 +15,14 @@ class Boolean extends Mode
 
         $indexFields = implode(',',  $this->modelService->setModel($builder->model)->getFullTextIndexFields());
 
-        $queryString .= "MATCH($indexFields) AGAINST(:_search IN BOOLEAN MODE)";
+        $queryString .= "MATCH($indexFields) AGAINST(? IN BOOLEAN MODE)";
 
         return $queryString;
     }
 
     public function buildParams(Builder $builder)
     {
-        $this->whereParams['_search'] = $builder->query;
+        $this->whereParams[] = $builder->query;
 
         return $this->whereParams;
     }
