@@ -126,13 +126,13 @@ would produce the following query in `NATURAL_LANGUAGE` mode:
 
 
 ```sql
-select * from `posts` where MATCH(content,meta) AGAINST(:_search IN NATURAL LANGUAGE MODE)
+select * from `posts` where MATCH(content,meta) AGAINST(? IN NATURAL LANGUAGE MODE)
 ```
 
 and the following query in `BOOLEAN` mode:
 
 ```sql
-select * from `posts` where MATCH(content,meta) AGAINST(:_search IN BOOLEAN MODE)
+select * from `posts` where MATCH(content,meta) AGAINST(? IN BOOLEAN MODE)
 ```
 
 Operators for `BOOLEAN` mode should be passed as part of the search string.
@@ -143,7 +143,7 @@ For more information see the
 
 ### LIKE and LIKE_EXPANDED Modes
 
-`LIKE` and `LIKE_EXPANDED` modes will run `WHERE LIKE %:_search%` queries that will include all of the Model's fields 
+`LIKE` and `LIKE_EXPANDED` modes will run `WHERE LIKE %?%` queries that will include all of the Model's fields 
 returned from `toSearchableArray()`. `LIKE_EXPANDED` mode will query each field using each individual word in the search string.
 
 For example running a search on a `Customer` model with the following database structure:
