@@ -31,6 +31,10 @@ class IndexService
             foreach ($files as $file) {
                 $class = getClassFullNameFromFile($file);
 
+                if (! class_exists($class) || ! in_array(Searchable::class, class_uses($class))) {
+                    continue;
+                }
+
                 $modelInstance = new $class();
 
                 $connectionName = $modelInstance->getConnectionName() !== null ?
@@ -38,7 +42,7 @@ class IndexService
 
                 $isMySQL = config("database.connections.$connectionName.driver") === 'mysql';
 
-                if (class_exists($class) && in_array(Searchable::class, class_uses($class)) && $isMySQL) {
+                if ($isMySQL) {
                     $searchableModels[] = $class;
                 }
             }
