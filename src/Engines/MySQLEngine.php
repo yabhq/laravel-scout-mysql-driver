@@ -55,7 +55,9 @@ class MySQLEngine extends Engine
         $params = $mode->buildParams($builder);
 
         $model = $builder->model;
-        $query = $model::whereRaw($whereRawString, $params);
+        // VME retail custom code: add filters
+        $filters = call_user_func($builder->callback);
+        $query = $model::whereRaw($whereRawString, $params)->filter($filters)->withoutGlobalScopes();
 
         $result['count'] = $query->count();
 
