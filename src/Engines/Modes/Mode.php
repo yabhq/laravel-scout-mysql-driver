@@ -1,9 +1,9 @@
 <?php
 
-namespace DamianTW\MySQLScout\Engines\Modes;
+namespace Yab\MySQLScout\Engines\Modes;
 
 use Laravel\Scout\Builder;
-use DamianTW\MySQLScout\Services\ModelService;
+use Yab\MySQLScout\Services\ModelService;
 
 abstract class Mode
 {
@@ -25,7 +25,7 @@ abstract class Mode
     protected function buildWheres(Builder $builder)
     {
         $this->whereParams = null;
-        
+
         $queryString = '';
 
         $parsedWheres = $this->parseWheres($builder->wheres);

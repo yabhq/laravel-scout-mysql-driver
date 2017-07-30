@@ -1,11 +1,11 @@
 <?php
 
-namespace DamianTW\MySQLScout\Commands;
+namespace Yab\MySQLScout\Commands;
 
 use Illuminate\Console\Command;
-use DamianTW\MySQLScout\Services\IndexService;
+use Yab\MySQLScout\Services\IndexService;
 use Illuminate\Contracts\Events\Dispatcher;
-use DamianTW\MySQLScout\Events;
+use Yab\MySQLScout\Events;
 
 class ManageIndexes extends Command
 {

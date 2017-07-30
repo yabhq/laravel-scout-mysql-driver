@@ -1,14 +1,14 @@
 <?php
 
-namespace DamianTW\MySQLScout\Providers;
+namespace Yab\MySQLScout\Providers;
 
-use DamianTW\MySQLScout\Engines\Modes\ModeContainer;
+use Yab\MySQLScout\Engines\Modes\ModeContainer;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Scout\EngineManager;
-use DamianTW\MySQLScout\Engines\MySQLEngine;
-use DamianTW\MySQLScout\Services\ModelService;
-use DamianTW\MySQLScout\Services\IndexService;
-use DamianTW\MySQLScout\Commands\ManageIndexes;
+use Yab\MySQLScout\Engines\MySQLEngine;
+use Yab\MySQLScout\Services\ModelService;
+use Yab\MySQLScout\Services\IndexService;
+use Yab\MySQLScout\Commands\ManageIndexes;
 
 class MySQLScoutServiceProvider extends ServiceProvider
 {
@@ -42,7 +42,7 @@ class MySQLScoutServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(ModeContainer::class, function ($app) {
-            $engineNamespace = 'DamianTW\\MySQLScout\\Engines\\Modes\\';
+            $engineNamespace = 'Yab\\MySQLScout\\Engines\\Modes\\';
             $mode = $engineNamespace.studly_case(strtolower(config('scout.mysql.mode')));
             $fallbackMode = $engineNamespace.studly_case(strtolower(config('scout.mysql.min_fulltext_search_fallback')));
 

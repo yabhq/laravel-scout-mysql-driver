@@ -1,9 +1,9 @@
 <?php
 
-namespace DamianTW\MySQLScout\Engines\Modes;
+namespace Yab\MySQLScout\Engines\Modes;
 
 use Laravel\Scout\Builder;
-use DamianTW\MySQLScout\Services\ModelService;
+use Yab\MySQLScout\Services\ModelService;
 
 class Like extends Mode
 {

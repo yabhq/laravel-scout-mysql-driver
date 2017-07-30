@@ -1,6 +1,6 @@
 <?php
 
-namespace DamianTW\MySQLScout\Services;
+namespace Yab\MySQLScout\Services;
 
 use Illuminate\Support\Facades\DB;
 

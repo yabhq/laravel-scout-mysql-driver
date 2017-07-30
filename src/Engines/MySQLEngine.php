@@ -1,8 +1,8 @@
 <?php
 
-namespace DamianTW\MySQLScout\Engines;
+namespace Yab\MySQLScout\Engines;
 
-use DamianTW\MySQLScout\Engines\Modes\ModeContainer;
+use Yab\MySQLScout\Engines\Modes\ModeContainer;
 use Illuminate\Database\Eloquent\Collection;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine;
