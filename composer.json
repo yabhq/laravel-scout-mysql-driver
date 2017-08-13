@@ -15,7 +15,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.6.4",
-        "laravel/framework": "5.3.*|5.4.*",
+        "laravel/framework": "5.3.*|5.4.*|5.5.*",
         "laravel/scout": "^2.0|^3.0"
     },
     "autoload": {
@@ -25,5 +25,12 @@
         "files": [
             "src/helpers.php"
         ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Yab\\MySQLScout\\Providers\\MySQLScoutServiceProvider"
+            ]
+        }
     }
 }
