@@ -25,5 +25,12 @@
         "files": [
             "src/helpers.php"
         ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Yab\\MySQLScout\\Providers\\MySQLScoutServiceProvider"
+            ]
+        }
     }
 }
