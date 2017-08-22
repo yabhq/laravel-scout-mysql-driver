@@ -29,7 +29,7 @@ Next add the ServiceProvider to the Package Service Providers in `config/app.php
         /*
          * Package Service Providers...
          */
-        DamianTW\MySQLScout\Providers\MySQLScoutServiceProvider::class,
+        Yab\MySQLScout\Providers\MySQLScoutServiceProvider::class,
 ```
 
 Append the default configuration to `config/scout.php`
