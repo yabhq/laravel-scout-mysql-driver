@@ -63,8 +63,8 @@ class ModelService
         $columns = [];
 
         //@TODO cache this
-        foreach (DB::connection($this->connectionName)->select("SHOW COLUMNS FROM $this->tableName") as $column) {
-            $columns[$column->Field] = null;
+        foreach (DB::connection($this->connectionName)->getSchemaBuilder()->getColumnListing($this->tableName) as $column) {
+            $columns[$column] = null;
         }
 
         return $columns;
