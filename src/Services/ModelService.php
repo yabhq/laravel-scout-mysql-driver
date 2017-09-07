@@ -40,8 +40,14 @@ class ModelService
         foreach ($searchableFields as $searchableField) {
 
             //@TODO cache this.
-            $columnType = DB::connection($this->connectionName)->
-            select("SHOW FIELDS FROM $this->tableName where Field = ?", [$searchableField])[0]->Type;
+            $sql = "SHOW FIELDS FROM $this->tableName where Field = ?";
+            $column = DB::connection($this->connectionName)->select($sql, [$searchableField]);
+
+            if (!isset($column[0])) {
+                continue;
+            }
+
+            $columnType = $column[0]->Type;
 
             if ($this->isFullTextSupportedColumnType($columnType)) {
                 $indexFields[] = $searchableField;
