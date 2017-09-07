@@ -49,6 +49,8 @@ class ModelService
 
             $columnType = $column[0]->Type;
 
+            // When using `$appends` to include an accessor for a field that doesn't exist,
+            // an ErrorException will be thrown for `Undefined Offset: 0`
             if ($this->isFullTextSupportedColumnType($columnType)) {
                 $indexFields[] = $searchableField;
             }
