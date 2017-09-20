@@ -40,9 +40,17 @@ class ModelService
         foreach ($searchableFields as $searchableField) {
 
             //@TODO cache this.
-            $columnType = DB::connection($this->connectionName)->
-            select("SHOW FIELDS FROM $this->tableName where Field = ?", [$searchableField])[0]->Type;
+            $sql = "SHOW FIELDS FROM $this->tableName where Field = ?";
+            $column = DB::connection($this->connectionName)->select($sql, [$searchableField]);
 
+            if (!isset($column[0])) {
+                continue;
+            }
+
+            $columnType = $column[0]->Type;
+
+            // When using `$appends` to include an accessor for a field that doesn't exist,
+            // an ErrorException will be thrown for `Undefined Offset: 0`
             if ($this->isFullTextSupportedColumnType($columnType)) {
                 $indexFields[] = $searchableField;
             }
