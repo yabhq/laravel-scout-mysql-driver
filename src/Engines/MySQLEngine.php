@@ -57,6 +57,10 @@ class MySQLEngine extends Engine
         $model = $builder->model;
         $query = $model::whereRaw($whereRawString, $params);
 
+        if($builder->callback){
+            $query = call_user_func($builder->callback, $query, $this);
+        }
+
         $result['count'] = $query->count();
 
         if (property_exists($builder, 'orders') && !empty($builder->orders)) {
