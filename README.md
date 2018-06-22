@@ -15,7 +15,7 @@ Installation <div id="installation"></div>
 
 **Note: Any Models you plan to search using this driver must use a MySQL MyISAM or InnoDB table.**
 
-If you haven't already you should [install Laravel Scout](https://laravel.com/docs/5.3/scout#installation) to
+If you haven't already you should [install Laravel Scout](https://laravel.com/docs/5.6/scout#installation) to
 your project and apply the `Laravel\Scout\Searchable` trait to any Eloquent models you would like to make searchable.
 
 Install this package via **Composer**
