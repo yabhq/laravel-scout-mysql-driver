@@ -197,7 +197,7 @@ Behavior can be changed by modifying the `scout.mysql` Laravel configuration val
 * `scout.mysql.mode` - The [mode](#mode) used to determine how the driver runs search queries. Acceptable values are
 `NATURAL_LANGUAGE`,`BOOLEAN`,`LIKE` and `LIKE_EXPANDED`.
 
-* `scout.mysql.model_directories` - If no model parameter is provided to the included `php artisian scout:mysql-index`
+* `scout.mysql.model_directories` - If no model parameter is provided to the included `php artisan scout:mysql-index`
 command the directories defined here will be searched for Model's with the `Laravel\Scout\Searchable` trait
 and a MySQL connection.
 
