@@ -56,6 +56,10 @@ class MySQLEngine extends Engine
 
         $model = $builder->model;
         $query = $model::whereRaw($whereRawString, $params);
+        
+        if (config('scout.soft_delete')) {
+            $query = $query->withTrashed();
+        }
 
         $result['count'] = $query->count();
 
