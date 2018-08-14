@@ -103,7 +103,7 @@ class MySQLEngine extends Engine
      *
      * @return Collection
      */
-    public function map($results, $model)
+    public function map(Laravel\Scout\Builder $builder, $results, $model)
     {
         return $results['results'];
     }
