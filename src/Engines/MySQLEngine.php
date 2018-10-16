@@ -112,7 +112,7 @@ class MySQLEngine extends Engine
      *
      * @return Collection
      */
-    public function map(Builder $builder, $model)
+    public function map(Builder $builder, $results, $model)
     {
         return $results['results'];
     }
