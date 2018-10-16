@@ -27,8 +27,17 @@ class MySQLEngine extends Engine
     {
     }
 
+    /**
+     * Pluck and return the primary keys of the given results.
+     *
+     * @param  mixed  $results
+     * @return \Illuminate\Support\Collection
+     */
     public function mapIds($results)
     {
+        return collect($results['results'])->map(function ($result) {
+            return $result->getKey();
+        });
     }
 
     /**
