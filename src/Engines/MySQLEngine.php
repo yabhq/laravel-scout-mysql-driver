@@ -98,12 +98,12 @@ class MySQLEngine extends Engine
     /**
      * Map the given results to instances of the given model.
      *
-     * @param mixed                               $results
+     * @param Laravel\Scout\Builder               $builder
      * @param \Illuminate\Database\Eloquent\Model $model
      *
      * @return Collection
      */
-    public function map($results, $model)
+    public function map(Builder $builder, $model)
     {
         return $results['results'];
     }
