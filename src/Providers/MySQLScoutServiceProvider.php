@@ -24,7 +24,7 @@ class MySQLScoutServiceProvider extends ServiceProvider
         }
 
         $this->app->make(EngineManager::class)->extend('mysql', function () {
-            return new MySQLEngine(resolve(ModeContainer::class));
+            return new MySQLEngine(app(ModeContainer::class));
         });
     }
 
