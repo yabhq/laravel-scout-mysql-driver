@@ -13,7 +13,7 @@ abstract class Mode
 
     public function __construct()
     {
-        $this->modelService = resolve(ModelService::class);
+        $this->modelService = app(ModelService::class);
     }
 
     abstract public function buildWhereRawString(Builder $builder);
