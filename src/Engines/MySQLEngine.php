@@ -133,6 +133,17 @@ class MySQLEngine extends Engine
         return $results['count'];
     }
 
+    /**
+     * Flush all of the model's records from the engine.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * 
+     * @return void
+     */
+    public function flush($model) 
+    {
+    }
+
     protected function shouldNotRun($builder)
     {
         return strlen($builder->query) < config('scout.mysql.min_search_length');
