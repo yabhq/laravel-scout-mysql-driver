@@ -37,11 +37,11 @@ Append the default configuration to `config/scout.php`
 ```php
 
     'mysql' => [
-        'mode' => 'NATURAL_LANGUAGE',
+        'mode' => Yab\MySQLScout\Engines\Modes\NaturalLanguage::class,
         'model_directories' => [app_path()],
         'min_search_length' => 0,
         'min_fulltext_search_length' => 4,
-        'min_fulltext_search_fallback' => 'LIKE',
+        'min_fulltext_search_fallback' => Yab\MySQLScout\Engines\Modes\Like::class,
         'query_expansion' => false
     ]
 
@@ -68,8 +68,8 @@ natively by MySQL. Therefore you can safely disable queuing in `config/scout.php
 ```
 
 In addition there is no need to use the `php artisan scout:import` command. However, if you plan to use this driver in
-either `NATURAL_LANGUAGE` or `BOOLEAN` mode you should first run the provided [console command](#console-command) to
-create the needed `FULLTEXT` indexes.
+either `NaturalLanguage` or `Boolean` mode you should first run the provided [console command](#console-command) to
+create the needed `Fulltext` indexes.
 
 Usage <div id="usage"></div>
 -----
@@ -97,17 +97,25 @@ For more usage information see the [Laravel Scout Documentation](https://laravel
 Modes <div id="modes"></div>
 -----
 
-This driver can perform different types of search queries depending on the mode set in the `scout.mysql.mode`
-Laravel configuration value. Currently 4 different modes are supported `NATURAL_LANGUAGE`,`BOOLEAN`,`LIKE` and `LIKE_EXPANDED`.
 
 
-### NATURAL_LANGUAGE and BOOLEAN Modes
+This driver can perform different types of search queries depending on the mode class set in the `scout.mysql.mode`
+Laravel configuration value. Currently 4 different modes are supported:
 
-In `NATURAL_LANGUAGE` and `BOOLEAN` mode the driver will run MySQL `WHERE MATCH() AGAINST()` queries in the
+- `Yab\MySQLScout\Engines\Modes\Boolean::class`
+- `Yab\MySQLScout\Engines\Modes\Like::class`
+- `Yab\MySQLScout\Engines\Modes\LikeExpanded::class`
+- `Yab\MySQLScout\Engines\Modes\NaturalLanguage::class`
+
+Feel free to create your own mode class extending the abstract Mode class `Yab\MySQLScout\Engines\Modes\Mode` to match your specific needs.
+
+### NaturalLanguage and Boolean Modes
+
+In `NaturalLanguage` and `Boolean` mode the driver will run MySQL `WHERE MATCH() AGAINST()` queries in the
 respective modes.
 
-Both modes search queries will include all of Model's `FULLTEXT` compatible fields (`CHAR`,`VARCHAR`,`TEXT`)
-returned from the Model's `toSearchableArray()` method. It is required to have a `FULLTEXT` index for these fields.
+Both modes search queries will include all of Model's `Fulltext` compatible fields (`CHAR`,`VARCHAR`,`TEXT`)
+returned from the Model's `toSearchableArray()` method. It is required to have a `Fulltext` index for these fields.
 You can create  this index using the provided [console command](#console-command).
 
 For example running a search on a `POST` model with the following database structure:
@@ -119,29 +127,29 @@ For example running a search on a `POST` model with the following database struc
 | meta        | TEXT             |
 
 
-would produce the following query in `NATURAL_LANGUAGE` mode:
+would produce the following query in `NaturalLanguage` mode:
 
 
 ```sql
 select * from `posts` where MATCH(content,meta) AGAINST(? IN NATURAL LANGUAGE MODE)
 ```
 
-and the following query in `BOOLEAN` mode:
+and the following query in `Boolean` mode:
 
 ```sql
 select * from `posts` where MATCH(content,meta) AGAINST(? IN BOOLEAN MODE)
 ```
 
-Operators for `BOOLEAN` mode should be passed as part of the search string.
+Operators for `Boolean` mode should be passed as part of the search string.
 
 
 For more information see the
-[MySQL's Full-Text Search Functions documentation](http://dev.mysql.com/doc/refman/5.7/en/fulltext-search.html).
+[MySQL's Full-Text Search Functions documentation](http://dev.mysql.com/doc/refman/5.7/en/Fulltext-search.html).
 
-### LIKE and LIKE_EXPANDED Modes
+### Like and LikeExpanded Modes
 
-`LIKE` and `LIKE_EXPANDED` modes will run `WHERE LIKE %?%` queries that will include all of the Model's fields
-returned from `toSearchableArray()`. `LIKE_EXPANDED` mode will query each field using each individual word in the search string.
+`LIKE` and `LikeExpanded` modes will run `WHERE LIKE %?%` queries that will include all of the Model's fields
+returned from `toSearchableArray()`. `LikeExpanded` mode will query each field using each individual word in the search string.
 
 For example running a search on a `Customer` model with the following database structure:
 
@@ -151,13 +159,13 @@ For example running a search on a `Customer` model with the following database s
 | first_name  | VARCHAR(255)     |
 | last_name   | VARCHAR(255)     |
 
-would produce the following query in `LIKE` mode given the search string "John":
+would produce the following query in `Like` mode given the search string "John":
 
 ```sql
 SELECT * FROM `customers` WHERE (`id` LIKE '%John%' OR `first_name` LIKE '%John%' OR `last_name` LIKE '%JOHN%')
 ```
 
-and the following query in `LIKE_EXPANDED` mode given the search string "John Smith":
+and the following query in `LikeExpanded` mode given the search string "John Smith":
 
 ```sql
 SELECT * FROM `customers` WHERE (`id` LIKE '%John%' OR `id` LIKE '%Smith%' OR `first_name` LIKE '%John%' OR `first_name` LIKE '%Smith%' OR `last_name` LIKE '%John%' OR `last_name` LIKE '%Smith%')
@@ -166,15 +174,15 @@ SELECT * FROM `customers` WHERE (`id` LIKE '%John%' OR `id` LIKE '%Smith%' OR `f
 Console Command <div id="console-command"></div>
 ---------------
 
-The command `php artisan scout:mysql-index {model?}` is included to manage the `FULLTEXT` indexes needed for
-`NATURAL_LANGUAGE`and `BOOLEAN` modes.
+The command `php artisan scout:mysql-index {model?}` is included to manage the `Fulltext` indexes needed for
+`NaturalLanguage`and `Boolean` modes.
 
 If the  model parameter is omitted the command will run with all Model's with the `Laravel\Scout\Searchable` trait
 and a MySQL connection within the  directories defined in the `scout.mysql.model_directories` Laravel configuration value.
 
 ### Creating Indexes
 
-Pass the command a Model to create a `FULLTEXT` index for all of the Model's `FULLTEXT` compatible fields
+Pass the command a Model to create a `Fulltext` index for all of the Model's `Fulltext` compatible fields
 (`CHAR`,`VARCHAR`,`TEXT`) returned from the Model's `toSearchableArray()` method.  The index name will be the result of
 the Model's `searchableAs()` method.
 
@@ -195,7 +203,7 @@ Configuration <div id="configuration"></div>
 Behavior can be changed by modifying the `scout.mysql` Laravel configuration values.
 
 * `scout.mysql.mode` - The [mode](#mode) used to determine how the driver runs search queries. Acceptable values are
-`NATURAL_LANGUAGE`,`BOOLEAN`,`LIKE` and `LIKE_EXPANDED`.
+`NaturalLanguage`,`Boolean`,`Like` and `LikeExpanded`.
 
 * `scout.mysql.model_directories` - If no model parameter is provided to the included `php artisan scout:mysql-index`
 command the directories defined here will be searched for Model's with the `Laravel\Scout\Searchable` trait
@@ -204,15 +212,15 @@ and a MySQL connection.
 * `scout.mysql.min_search_length` - If the length of a search string is smaller then this value no search queries will
 run and an empty Collection will be returned.
 
-* `scout.mysql.min_fulltext_search_length` - If using `NATURAL_LANGUAGE` or `BOOLEAN` modes and a search string's length
+* `scout.mysql.min_fulltext_search_length` - If using `NaturalLanguage` or `Boolean` modes and a search string's length
 is less than this value the driver will revert to a fallback mode. By default MySQL requires a search string length of at
-least 4 to to run `FULLTEXT` queries. For information on changing this see the
-[MySQL's Fine-Tuning MySQL Full-Text Search documentation](http://dev.mysql.com/doc/refman/5.7/en/fulltext-fine-tuning.html).
+least 4 to to run `Fulltext` queries. For information on changing this see the
+[MySQL's Fine-Tuning MySQL Full-Text Search documentation](http://dev.mysql.com/doc/refman/5.7/en/Fulltext-fine-tuning.html).
 
 * `scout.mysql.min_fulltext_search_fallback` - The mode that will be used as a fallback when the search string's length
-is less than `scout.mysql.min_fulltext_search_length` in `NATURAL_LANGUAGE` or `BOOLEAN` modes. Acceptable values are
-`LIKE` and `LIKE_EXPANDED`.
+is less than `scout.mysql.min_fulltext_search_length` in `NaturalLanguage` or `Boolean` modes. Acceptable values are
+`Like` and `LikeExpanded`.
 
 * `scout.mysql.query_expansion` - If set to true MySQL query expansion will be used in search queries. Only applies if
-using `NATURAL_LANGUAGE` mode. For more information see
-[MySQL's Full-Text Searches with Query Expansion documentation](http://dev.mysql.com/doc/refman/5.7/en/fulltext-query-expansion.html).
+using `NaturalLanguage` mode. For more information see
+[MySQL's Full-Text Searches with Query Expansion documentation](http://dev.mysql.com/doc/refman/5.7/en/Fulltext-query-expansion.html).
