@@ -1,8 +1,8 @@
     'mysql' => [
-        'mode' => 'NATURAL_LANGUAGE',
+        'mode' => Yab\MySQLScout\Engines\Modes\NaturalLanguage::class,
         'model_directories' => [app_path()],
         'min_search_length' => 0,
         'min_fulltext_search_length' => 4,
-        'min_fulltext_search_fallback' => 'LIKE',
+        'min_fulltext_search_fallback' => Yab\MySQLScout\Engines\Modes\Like::class,
         'query_expansion' => false
     ]

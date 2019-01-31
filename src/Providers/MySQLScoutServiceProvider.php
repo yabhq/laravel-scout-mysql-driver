@@ -42,11 +42,10 @@ class MySQLScoutServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(ModeContainer::class, function ($app) {
-            $engineNamespace = 'Yab\\MySQLScout\\Engines\\Modes\\';
-            $mode = $engineNamespace.studly_case(strtolower(config('scout.mysql.mode')));
-            $fallbackMode = $engineNamespace.studly_case(strtolower(config('scout.mysql.min_fulltext_search_fallback')));
+            $modeClass = config('scout.mysql.mode');
+            $fallbackModeClass = config('scout.mysql.min_fulltext_search_fallback');
 
-            return new ModeContainer(new $mode(), new $fallbackMode());
+            return new ModeContainer(app($modeClass), app($fallbackModeClass));
         });
     }
 }
