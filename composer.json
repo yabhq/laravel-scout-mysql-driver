@@ -15,7 +15,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0",
-        "laravel/scout": "~6.0"
+        "laravel/scout": "~6.0|~7.0"
     },
     "autoload": {
         "psr-4": {
