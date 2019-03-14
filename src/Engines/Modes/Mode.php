@@ -35,9 +35,12 @@ abstract class Mode
             $operator = $parsedWhere[1];
             $value = $parsedWhere[2];
 
-            $this->whereParams[$field] = $value;
-
-            $queryString .= "$field $operator ? AND ";
+            if ($value !== null) {
+                $this->whereParams[$field] = $value;
+                $queryString .= "$field $operator ? AND ";
+            } else {
+                $queryString .= "$field IS NULL AND ";
+            }
         }
 
         return $queryString;
