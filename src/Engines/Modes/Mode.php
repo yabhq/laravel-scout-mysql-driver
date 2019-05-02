@@ -48,7 +48,7 @@ abstract class Mode
 
     private function parseWheres($wheres)
     {
-        $pattern = '/([A-Za-z_]+[A-Za-z_0-9]?)[ ]?(<>|!=|=|<=|<|>=|>)/';
+        $pattern = '/([A-Za-z_]+[A-Za-z_0-9]?)[ ]?(<>|!=|=|<=|<|>=|>|LIKE|like)/';
 
         $result = array();
         foreach ($wheres as $field => $value) {
