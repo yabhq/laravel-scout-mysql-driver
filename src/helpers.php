@@ -94,6 +94,8 @@
                 $classes[] = $class_name;
             }
         }
-
+        if (!isset($classes[0]) {
+            return 'no_class_found_in_file';
+        }
         return $classes[0];
     }
