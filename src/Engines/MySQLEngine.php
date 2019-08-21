@@ -4,6 +4,7 @@ namespace Yab\MySQLScout\Engines;
 
 use Yab\MySQLScout\Engines\Modes\ModeContainer;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine;
 
@@ -65,6 +66,9 @@ class MySQLEngine extends Engine
 
         $model = $builder->model;
         $query = $model::whereRaw($whereRawString, $params);
+        if ($mode->isFullText()) {
+            $query = $query->selectRaw(DB::raw($mode->buildSelectColumns($builder)), $params);
+        }
 
         if($builder->callback){
             $query = call_user_func($builder->callback, $query, $this);

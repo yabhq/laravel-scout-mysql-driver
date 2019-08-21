@@ -20,6 +20,13 @@ class Boolean extends Mode
         return $queryString;
     }
 
+    public function buildSelectColumns(Builder $builder)
+    {
+        $indexFields = implode(',',  $this->modelService->setModel($builder->model)->getFullTextIndexFields());
+
+        return "*, MATCH($indexFields) AGAINST(? IN NATURAL LANGUAGE MODE) AS relevance";
+    }
+
     public function buildParams(Builder $builder)
     {
         $this->whereParams[] = $builder->query;
