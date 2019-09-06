@@ -2,6 +2,7 @@
 
 namespace Yab\MySQLScout\Providers;
 
+use Illuminate\Support\Str;
 use Yab\MySQLScout\Engines\Modes\ModeContainer;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Scout\EngineManager;
@@ -43,8 +44,8 @@ class MySQLScoutServiceProvider extends ServiceProvider
 
         $this->app->singleton(ModeContainer::class, function ($app) {
             $engineNamespace = 'Yab\\MySQLScout\\Engines\\Modes\\';
-            $mode = $engineNamespace.studly_case(strtolower(config('scout.mysql.mode')));
-            $fallbackMode = $engineNamespace.studly_case(strtolower(config('scout.mysql.min_fulltext_search_fallback')));
+            $mode = $engineNamespace.Str::studly(strtolower(config('scout.mysql.mode')));
+            $fallbackMode = $engineNamespace.Str::studly(strtolower(config('scout.mysql.min_fulltext_search_fallback')));
 
             return new ModeContainer(new $mode(), new $fallbackMode());
         });
