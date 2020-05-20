@@ -70,8 +70,8 @@ class MySQLEngine extends Engine
             $query = $query->selectRaw(DB::raw($mode->buildSelectColumns($builder)), $params);
         }
 
-        if($builder->callback){
-            $query = call_user_func($builder->callback, $query, $this);
+        if($builder->queryCallback){
+            $query = call_user_func($builder->queryCallback, $query, $this);
         }
 
         $result['count'] = $query->count();
