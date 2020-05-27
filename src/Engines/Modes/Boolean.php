@@ -24,7 +24,7 @@ class Boolean extends Mode
     {
         $indexFields = implode(',',  $this->modelService->setModel($builder->model)->getFullTextIndexFields());
 
-        return "*, MATCH($indexFields) AGAINST(? IN NATURAL LANGUAGE MODE) AS relevance";
+        return "*, MATCH($indexFields) AGAINST(? IN BOOLEAN MODE) AS relevance";
     }
 
     public function buildParams(Builder $builder)
