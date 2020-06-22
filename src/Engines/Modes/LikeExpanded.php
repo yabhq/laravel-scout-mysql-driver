@@ -11,6 +11,8 @@ class LikeExpanded extends Mode
 
     public function buildWhereRawString(Builder $builder)
     {
+        $table = $builder->model->getTable();
+        
         $queryString = '';
 
         $this->fields = $this->modelService->setModel($builder->model)->getSearchableFields();
@@ -23,14 +25,14 @@ class LikeExpanded extends Mode
 
         foreach ($this->fields as $field) {
             foreach ($words as $word) {
-                $queryString .= "`$field` LIKE ? OR ";
+                $queryString .= "`$table`.`$field` LIKE ? OR ";
             }
         }
 
         $queryString = trim($queryString, 'OR ');
         $queryString .= ')';
 
-        return$queryString;
+        return $queryString;
     }
 
     public function buildParams(Builder $builder)
