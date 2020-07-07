@@ -88,7 +88,7 @@ class IndexService
         $indexName = $this->modelService->indexName;
 
         return !empty(DB::connection($this->modelService->connectionName)->
-        select("SHOW INDEX FROM `$tableName` WHERE Key_name = ?", [$indexName]));
+        select("SHOW INDEX FROM `$tableName` WHERE `Key_name` = ?", [$indexName]));
     }
 
     protected function indexNeedsUpdate()
@@ -105,7 +105,7 @@ class IndexService
         $tableName = $this->modelService->tablePrefixedName;
 
         $index = DB::connection($this->modelService->connectionName)->
-        select("SHOW INDEX FROM `$tableName` WHERE Key_name = ?", [$indexName]);
+        select("SHOW INDEX FROM `$tableName` WHERE `Key_name` = ?", [$indexName]);
 
         $indexFields = [];
 
