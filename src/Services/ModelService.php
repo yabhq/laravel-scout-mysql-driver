@@ -48,7 +48,7 @@ class ModelService
         foreach ($searchableFields as $searchableField) {
 
             //@TODO cache this.
-            $sql = "SHOW FIELDS FROM `$this->tablePrefixedName` where Field = ?";
+            $sql = "SHOW FIELDS FROM `$this->tablePrefixedName` where `Field` = ?";
             $column = DB::connection($this->connectionName)->select($sql, [$searchableField]);
 
             if (!isset($column[0])) {
