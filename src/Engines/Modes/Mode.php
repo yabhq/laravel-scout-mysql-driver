@@ -9,6 +9,9 @@ abstract class Mode
 {
     protected $whereParams = [];
 
+    /**
+     * @var ModelService
+     */
     protected $modelService;
 
     public function __construct()

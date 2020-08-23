@@ -8,13 +8,21 @@ class NaturalLanguage extends Mode
 {
     public function buildWhereRawString(Builder $builder)
     {
-        $queryString = '';
+        return $this->buildWheres($builder) . $this->buildMatchQuery($builder);
+    }
 
-        $queryString .= $this->buildWheres($builder);
+    public function buildSelectColumns(Builder $builder)
+    {
+        $matchQuery = $this->buildMatchQuery($builder);
 
+        return "*, $matchQuery as relevance";
+    }
+
+    private function buildMatchQuery(Builder $builder)
+    {
         $indexFields = implode(',',  $this->modelService->setModel($builder->model)->getFullTextIndexFields());
 
-        $queryString .= "MATCH($indexFields) AGAINST(? IN NATURAL LANGUAGE MODE";
+        $queryString = "MATCH($indexFields) AGAINST(? IN NATURAL LANGUAGE MODE";
 
         if (config('scout.mysql.query_expansion')) {
             $queryString .= ' WITH QUERY EXPANSION';
@@ -23,13 +31,6 @@ class NaturalLanguage extends Mode
         $queryString .= ')';
 
         return $queryString;
-    }
-
-    public function buildSelectColumns(Builder $builder)
-    {
-        $indexFields = implode(',',  $this->modelService->setModel($builder->model)->getFullTextIndexFields());
-
-        return "*, MATCH($indexFields) AGAINST(? IN NATURAL LANGUAGE MODE) AS relevance";
     }
 
     public function buildParams(Builder $builder)
