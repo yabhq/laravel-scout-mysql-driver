@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine;
+use Yab\MySQLScout\Contracts\AlwaysUseFallbackSearch;
 
 class MySQLEngine extends Engine
 {
@@ -70,7 +71,7 @@ class MySQLEngine extends Engine
             $query = $query->selectRaw(DB::raw($mode->buildSelectColumns($builder)), $params);
         }
 
-        if($builder->callback){
+        if ($builder->callback) {
             $query = call_user_func($builder->callback, $query, $this);
         }
 
@@ -141,10 +142,10 @@ class MySQLEngine extends Engine
      * Flush all of the model's records from the engine.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $model
-     * 
+     *
      * @return void
      */
-    public function flush($model) 
+    public function flush($model)
     {
     }
 
@@ -153,9 +154,15 @@ class MySQLEngine extends Engine
         return strlen($builder->query) < config('scout.mysql.min_search_length');
     }
 
+    protected function fallbackSearchShouldBeUsedForModel($builder)
+    {
+        return $builder->model instanceof AlwaysUseFallbackSearch;
+    }
+
     protected function shouldUseFallback($builder)
     {
-        return $this->mode->isFullText() &&
-        strlen($builder->query) < config('scout.mysql.min_fulltext_search_length');
+        return ($this->mode->isFullText() &&
+        strlen($builder->query) < config('scout.mysql.min_fulltext_search_length')) ||
+        $this->fallbackSearchShouldBeUsedForModel($builder);
     }
 }
