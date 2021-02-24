@@ -40,7 +40,8 @@ class IndexService
                 $connectionName = $modelInstance->getConnectionName() !== null ?
                     $modelInstance->getConnectionName() : config('database.default');
 
-                $isMySQL = config("database.connections.$connectionName.driver") === 'mysql';
+                $isMySQL = config("database.connections.$connectionName.driver") === 'mysql' ||
+                    config("database.connections.$connectionName.driver") === 'mariadb';
 
                 if ($isMySQL) {
                     $searchableModels[] = $class;
