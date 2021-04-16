@@ -67,7 +67,7 @@ class MySQLEngine extends Engine
         $model = $builder->model;
         $query = $model::whereRaw($whereRawString, $params);
         if ($mode->isFullText()) {
-            $query = $query->selectRaw(DB::raw($mode->buildSelectColumns($builder)), $params);
+          $query = $query->selectRaw(DB::raw($mode->buildSelectColumns($builder)), [$params[0]]);
         }
 
         if($builder->callback){
