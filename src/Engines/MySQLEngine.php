@@ -2,6 +2,7 @@
 
 namespace Yab\MySQLScout\Engines;
 
+use Illuminate\Support\LazyCollection;
 use Yab\MySQLScout\Engines\Modes\ModeContainer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -164,5 +165,45 @@ class MySQLEngine extends Engine
         return ($this->mode->isFullText() &&
         strlen($builder->query) < config('scout.mysql.min_fulltext_search_length')) ||
         $this->fallbackSearchShouldBeUsedForModel($builder);
+    }
+
+    /**
+     * Map the given results to instances of the given model via a lazy collection.
+     *
+     * @param  \Laravel\Scout\Builder  $builder
+     * @param  mixed  $results
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return \Illuminate\Support\LazyCollection
+     */
+    public function lazyMap(Builder $builder, $results, $model)
+    {
+        if ($this->getTotalCount($results) === 0) {
+            return LazyCollection::empty();
+        }
+
+        return LazyCollection::make($results['results']->all());
+    }
+
+    /**
+     * Create a search index.
+     *
+     * @param  string  $name
+     * @param  array  $options
+     * @return mixed
+     */
+    public function createIndex($name, array $options = [])
+    {
+
+    }
+
+    /**
+     * Delete a search index.
+     *
+     * @param  string  $name
+     * @return mixed
+     */
+    public function deleteIndex($name)
+    {
+
     }
 }
