@@ -163,6 +163,31 @@ and the following query in `LIKE_EXPANDED` mode given the search string "John Sm
 SELECT * FROM `customers` WHERE (`id` LIKE '%John%' OR `id` LIKE '%Smith%' OR `first_name` LIKE '%John%' OR `first_name` LIKE '%Smith%' OR `last_name` LIKE '%John%' OR `last_name` LIKE '%Smith%')
 ```
 
+### LIKE_CASE_INSENSITIVE and LIKE_EXPANDED_CASE_INSENSITIVE Modes
+
+`LIKE_CASE_INSENSITIVE` and `LIKE_EXPANDED_CASE_INSENSITIVE` modes are similar to `LIKE` and `LIKE_EXPANDED` modes except they will force both the field and parameter to lowercase in order 
+to perform a case-insensitive search. Note that you do not need to use this if you are already using a case-insensitive collation.
+
+For example running a search on a `Customer` model with the following database structure:
+
+| column name | type             |
+|-------------|------------------|
+| id          | int(10) UN AI PK |
+| first_name  | VARCHAR(255)     |
+| last_name   | VARCHAR(255)     |
+
+would produce the following query in `LIKE_CASE_INSENSITIVE` mode given the search string "John":
+
+```sql
+SELECT * FROM `customers` WHERE (LCASE(`id`) LIKE LOWER('%John%') OR LCASE(`first_name`) LIKE LOWER('%John%') OR LCASE(`last_name`) LIKE LOWER('%JOHN%'))
+```
+
+and the following query in `LIKE_EXPANDED_CASE_INSENSITIVE` mode given the search string "John Smith":
+
+```sql
+SELECT * FROM `customers` WHERE (LCASE(`id`) LIKE LOWER('%John%') OR LCASE(`id`) LIKE LOWER('%Smith%') OR LCASE(`first_name`) LIKE LOWER('%John%') OR LCASE(`first_name`) LIKE LOWER('%Smith%') OR LCASE(`last_name`) LIKE LOWER('%John%') OR LCASE(`last_name`) LIKE LOWER('%Smith%'))
+```
+
 Console Command <div id="console-command"></div>
 ---------------
 
