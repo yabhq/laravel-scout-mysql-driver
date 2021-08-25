@@ -11,6 +11,8 @@ use Yab\MySQLScout\Services\ModelService;
 use Yab\MySQLScout\Services\IndexService;
 use Yab\MySQLScout\Commands\ManageIndexes;
 
+use Laravel\Scout\Builder;
+
 class MySQLScoutServiceProvider extends ServiceProvider
 {
     /**
@@ -26,6 +28,12 @@ class MySQLScoutServiceProvider extends ServiceProvider
 
         $this->app->make(EngineManager::class)->extend('mysql', function () {
             return new MySQLEngine(app(ModeContainer::class));
+        });
+		
+		// Add Macro WhereIn
+		Builder::macro('whereIn', function ($field,$collection) {
+            $this->where($field.' IN ','('.(implode(',',$collection->toArray())).')');
+            return $this;
         });
     }
 

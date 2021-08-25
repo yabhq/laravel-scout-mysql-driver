@@ -39,8 +39,18 @@ abstract class Mode
             $value = $parsedWhere[2];
 
             if ($value !== null) {
-                $this->whereParams[$field] = $value;
-                $queryString .= "$field $operator ? AND ";
+                if($operator == 'IN')
+                {
+                    if($value == '()')
+                        $queryString .= "0=1 AND ";
+                    else
+                        $queryString .= "$field $operator $value AND ";
+                }
+                else
+                {
+                    $this->whereParams[$field] = $value;
+                    $queryString .= "$field $operator ? AND ";
+                }
             } else {
                 $queryString .= "$field IS NULL AND ";
             }
@@ -51,7 +61,7 @@ abstract class Mode
 
     private function parseWheres($wheres)
     {
-        $pattern = '/([A-Za-z_]+[A-Za-z_0-9]?)[ ]?(<>|!=|=|<=|<|>=|>)/';
+        $pattern = '/([A-Za-z_]+[A-Za-z_0-9]?)[ ]?(<>|!=|=|<=|<|>=|>|IN)/';
 
         $result = array();
         foreach ($wheres as $field => $value) {

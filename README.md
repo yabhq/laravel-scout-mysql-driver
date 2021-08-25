@@ -87,10 +87,21 @@ Simple constraints can be applied using the `where()` builder method
 
 `$beers = App\Drink::search('beer')->where('in_stock', 1)->get();`
 
-The following operators can be applied to the `WHERE` statements: `<> != = <= < >= >`
+The following operators can be applied to the `WHERE` statements: `<> != = <= < >= > IN`
 (`=` will be used if no operator is specified)
 
 `$beers = App\Drink::search('beer')->where('abv >', 10)->get();`
+
+`$beers = App\Drink::search('beer')->where('abv IN', '(8,9,10)')->get();`
+
+Thanks to IN statement it's possible to apply complex constraints. Get a Collection and call the `pluck` method, then pass the result to `whereIn` Scout Builder method:
+
+```php
+
+    $matching = App\Drink::whereHas('ownglasses')->pluck('id');
+	$beers = App\Drink::search('beer')->whereIn('id',$matching)->get();
+
+```
 
 For more usage information see the [Laravel Scout Documentation](https://laravel.com/docs/5.3/scout).
 
