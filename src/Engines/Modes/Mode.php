@@ -42,7 +42,12 @@ abstract class Mode
                 $this->whereParams[$field] = $value;
                 $queryString .= "$field $operator ? AND ";
             } else {
-                $queryString .= "$field IS NULL AND ";
+                
+                if($operator === '!='){
+                    $queryString .= "$field IS NOT NULL AND ";
+                }else{
+                    $queryString .= "$field IS NULL AND ";
+                }
             }
         }
 
